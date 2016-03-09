@@ -1,0 +1,32 @@
+package uk.ac.glasgow.jagora.test;
+
+import static org.junit.Assert.*;
+
+import org.junit.*;
+
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.impl.DefaultStock;
+
+public class DefaultStockTest {
+	
+	private String name = "default";
+	private Stock stock; 
+	
+	@Before
+	public void setUp() throws Exception {
+		this.stock = new DefaultStock(name);
+		
+	}
+	
+	@Test
+	public void testName()
+	{
+		assertEquals("Expecting 'default'.", name, stock.getName());
+	}
+	
+	@After
+	public void tearDown(){
+		stock = null; 
+		name = null;
+	}
+}

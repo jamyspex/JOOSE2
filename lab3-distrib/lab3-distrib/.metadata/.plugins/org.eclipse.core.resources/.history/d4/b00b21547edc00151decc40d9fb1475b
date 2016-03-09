@@ -1,0 +1,96 @@
+package uk.ac.glasgow.jagora.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static uk.ac.glasgow.jagora.test.stub.StubStock.lemons;
+import static uk.ac.glasgow.jagora.test.stub.StubTrader.trader;
+import static uk.ac.glasgow.jagora.test.stub.StubWorld.world;
+import static uk.ac.glasgow.jagora.test.stub.StubBuyOrder.buyOrder;
+import static uk.ac.glasgow.jagora.test.stub.StubSellOrder.sellOrder;
+
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.glasgow.jagora.BuyOrder;
+import uk.ac.glasgow.jagora.Market;
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.TickEvent;
+import uk.ac.glasgow.jagora.Trade;
+import uk.ac.glasgow.jagora.Trader;
+import uk.ac.glasgow.jagora.World;
+import uk.ac.glasgow.jagora.impl.ContinuousOrderDrivenMarket;
+import uk.ac.glasgow.jagora.impl.LimitBuyOrder;
+import uk.ac.glasgow.jagora.impl.LimitSellOrder;
+
+
+// Test ContinousOrderDrivenMarketTest
+
+public class ContinuousOrderDrivenMarketTest {
+		
+		// define dummy vars
+	
+		private Stock stock = lemons;
+		private World w = world;
+		private Trader t = trader;
+		private BuyOrder buy = n
+		
+		// define test object
+		private Market market; 
+		
+		@Before
+		public void setUp() throws Exception {
+			
+			// instantiate test object
+			this.market = new ContinuousOrderDrivenMarket(stock, w);
+			
+		
+		}
+		
+		// Test doClearing method
+		@Test
+		public void testDoClearing()
+		{
+			List<TickEvent<Trade>> completedTrades = market.doClearing();
+			
+			for(int i = 0; i < completedTrades.size()-1; i++)
+			{
+				assertTrue(completedTrades.get(i).compareTo(completedTrades.get(i+1)) < 0);
+			}
+			
+		}
+		
+		@Test
+		public void testGetBestBid()
+		{
+			double bestBid = market.getBestBid();
+			Double newBestBid = bestBid + 1;
+			
+			market.placeBuyOrder(new LimitBuyOrder(t, stock, 100, newBestBid));
+			
+			assertEquals("Best bid incorrect", newBestBid, market.getBestBid());
+			
+		}
+		@Test
+		public void testGetBestOffer()
+		{
+			double bestOffer = market.getBestOffer();
+			Double newBestOffer = bestOffer + 1;
+			
+			market.placeSellOrder(new LimitSellOrder(t, stock, 100, newBestOffer));
+			
+			assertEquals("Best offer incorrect", newBestOffer, market.getBestOffer());
+		}
+		
+		@After
+		public void tearDown(){
+			stock = null;
+			t = null;
+			w = null;
+			market = null;
+		}
+	}
+
+

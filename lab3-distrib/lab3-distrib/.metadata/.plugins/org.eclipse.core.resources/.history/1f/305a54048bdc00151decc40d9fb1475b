@@ -1,0 +1,91 @@
+package uk.ac.glasgow.jagora.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static uk.ac.glasgow.jagora.test.stub.StubStock.lemons;
+import static uk.ac.glasgow.jagora.test.stub.StubTrader.trader;
+import static uk.ac.glasgow.jagora.test.stub.StubWorld.world;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.TickEvent;
+import uk.ac.glasgow.jagora.Trade;
+import uk.ac.glasgow.jagora.TradeException;
+import uk.ac.glasgow.jagora.Trader;
+import uk.ac.glasgow.jagora.World;
+import uk.ac.glasgow.jagora.impl.DefaultTrade;
+import uk.ac.glasgow.jagora.impl.LimitBuyOrder;
+import uk.ac.glasgow.jagora.impl.LimitSellOrder;
+
+public class DefaultTradeTest {
+
+	// define dummy vars
+
+	private Trader t;
+	private World w;
+	private Double cash = 213132.234d;
+	private Stock stock;
+	private Integer quantity = 500;
+	private Double orderPrice = 4235.2;
+
+	// define simulation objects
+
+	private LimitBuyOrder buyOrder;
+	private LimitSellOrder sellOrder;
+
+	// define test objs
+
+	private Trade trade;
+
+	@Before
+	public void setUp() {
+		// init dummy objs
+		this.stock = lemons;
+		this.w = world;
+		this.t = trader;
+
+		// init simulation objects
+
+		this.buyOrder = new LimitBuyOrder(t, stock, quantity, orderPrice);
+		this.sellOrder = new LimitSellOrder(t, stock, quantity, orderPrice);
+
+		// init test obj
+
+		this.trade = new DefaultTrade(w, buyOrder, sellOrder, stock, quantity, cash);
+	}
+
+	// test getQuantity method
+	@Test
+	public void testGetQuantity() {
+		assertEquals("issue with getQuantity", quantity, trade.getQuantity());
+	}
+
+	// test getPrice method
+	@Test
+	public void testGetPrice() {
+		assertEquals("issue with getPrice", orderPrice, trade.getPrice());
+	}
+
+	// test execute()
+	@Test
+	public void testExecute() throws Exception
+	{
+		// perform trade
+		TickEvent<Trade> event = trade.execute();
+		
+		// check tick time is correct		
+		assertTrue("Tick time incorrect", System.nanoTime() - 1000l < event.getTick() &&
+				System.nanoTime() + 1000l > event.getTick());
+		
+		// check quantity after trade
+		assertEquals("issue with quantity", quantity, event.getEvent().getQuantity());	
+		
+		// check price after trade
+		
+		assertEquals("issue with price", orderPrice, event.getEvent().getPrice());
+		
+	}
+
+}

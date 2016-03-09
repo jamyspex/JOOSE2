@@ -1,0 +1,25 @@
+package uk.ac.glasgow.jagora.test;
+
+public class Snippet {
+	// test satisfy Trade method
+		@Test
+		public void testStatisfyTrade() throws Exception{
+			
+			Integer initQuan = order2.getRemainingQuantity();
+			
+			// perform trade using TickEventStub which has default quantity of 50
+			order2.satisfyTrade(tick);
+			assertEquals(new Integer(initQuan - 50) , order2.getRemainingQuantity());
+			
+		}
+		
+		// test rollback trade method
+		@Test
+		public void testRollBackTrade() throws TradeException{
+			
+			Integer initQuan = order2.getRemainingQuantity();
+			order2.rollBackTrade(tick);
+			assertEquals(new Integer(initQuan + 50), order2.getRemainingQuantity());
+		}
+}
+

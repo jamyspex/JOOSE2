@@ -1,0 +1,59 @@
+package uk.ac.glasgow.jagora.test;
+
+import static org.junit.Assert.assertEquals;
+import static uk.ac.glasgow.jagora.test.stub.StubStock.lemons;
+import static uk.ac.glasgow.jagora.test.stub.StubTrader.trader;
+import static uk.ac.glasgow.jagora.test.stub.StubWorld.world;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.Trade;
+import uk.ac.glasgow.jagora.Trader;
+import uk.ac.glasgow.jagora.World;
+import uk.ac.glasgow.jagora.impl.DefaultTrade;
+import uk.ac.glasgow.jagora.impl.LimitBuyOrder;
+import uk.ac.glasgow.jagora.impl.LimitSellOrder;
+
+public class DefaultTradeTest {
+	
+	
+	// define dummy vars
+	
+	private Trader t;
+	private World w;
+	private Trade trade;
+	private Double cash = 213132.234d;
+	private Stock stock;
+	private Integer quantity = 500;
+	
+	private Double orderPrice = 4235.2;
+	
+	private LimitBuyOrder buyOrder;
+	
+	private LimitSellOrder sellOrder;
+	
+	@Before
+	public void setUp(){
+		
+		this.stock = lemons;
+		this.w = world;
+		this.t = trader;
+		
+		this.buyOrder = new LimitBuyOrder(t, stock, quantity, orderPrice);
+		
+		this.sellOrder = new LimitSellOrder(t, stock, quantity, orderPrice);
+		
+		this.trade = new DefaultTrade(w, buyOrder, sellOrder, stock, quantity, cash);
+	}
+	
+	@Test
+	public void testGetQuantity(){
+		assertEquals(quantity, trade.getQuantity());
+	}
+	@Test
+	public void testGetPrice(){
+		assertEquals(orderPrice, trade.getPrice());
+	}
+}

@@ -1,0 +1,115 @@
+package uk.ac.glasgow.jagora.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static uk.ac.glasgow.jagora.test.stub.StubStock.lemons;
+import static uk.ac.glasgow.jagora.test.stub.StubTrader.trader;
+import static uk.ac.glasgow.jagora.test.stub.StubWorld.world;
+import static uk.ac.glasgow.jagora.test.stub.StubBuyOrder.buyOrder;
+import static uk.ac.glasgow.jagora.test.stub.StubSellOrder.sellOrder;
+
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.glasgow.jagora.BuyOrder;
+import uk.ac.glasgow.jagora.Market;
+import uk.ac.glasgow.jagora.SellOrder;
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.TickEvent;
+import uk.ac.glasgow.jagora.Trade;
+import uk.ac.glasgow.jagora.Trader;
+import uk.ac.glasgow.jagora.World;
+import uk.ac.glasgow.jagora.impl.ContinuousOrderDrivenMarket;
+import uk.ac.glasgow.jagora.impl.LimitBuyOrder;
+import uk.ac.glasgow.jagora.impl.LimitSellOrder;
+
+// Test ContinousOrderDrivenMarketTest
+
+public class ContinuousOrderDrivenMarketTest {
+
+	// define dummy vars
+
+	private Stock stock = lemons;
+	private World w = world;
+	private Trader t = trader;
+	private BuyOrder buy = buyOrder;
+	private SellOrder sell = sellOrder;
+
+	// define test object
+	private Market market;
+
+	@Before
+	public void setUp() throws Exception {
+
+		// instantiate test object
+		this.market = new ContinuousOrderDrivenMarket(stock, w);
+
+	}
+
+	// Test doClearing method
+	@Test
+	public void testDoClearing() {
+		
+		// place 4 matching buy and sell orders
+		for (int i = 0; i < 4; i++) {
+			market.placeBuyOrder(buy);
+			market.placeSellOrder(sell);
+		}
+
+		// call doClearing
+		List<TickEvent<Trade>> completedTrades = market.doClearing();
+
+		// check the number of completed is correct
+		assertEquals("doClearing list size wrong", 4, completedTrades.size());
+
+		// check the are ordered correctly
+		for (int i = 0; i < completedTrades.size() - 1; i++) {
+			assertTrue("doClearing list order wrong", completedTrades.get(i).compareTo(completedTrades.get(i + 1)) < 0);
+		}
+
+	}
+	
+	// get best bid test
+	@Test
+	public void testGetBestBid() {
+		
+		// get the current best bid		
+		double bestBid = market.getBestBid();
+		// increment the best bid by 1
+		Double newBestBid = bestBid + 1;
+
+		// palace a buy order for the new best bid amount
+		market.placeBuyOrder(new LimitBuyOrder(t, stock, 100, newBestBid));
+
+		// check that bid is returned from best bid method.
+		assertEquals("Best bid incorrect", newBestBid, market.getBestBid());
+
+	}
+
+	@Test
+	public void testGetBestOffer() {
+		
+		// get the current best offer
+		double bestOffer = market.getBestOffer();
+		// decrement the best offer by 1
+		Double newBestOffer = bestOffer - 1;
+
+		// palace a sell order for the new best offer amount 
+		market.placeSellOrder(new LimitSellOrder(t, stock, 100, newBestOffer));
+
+		// check that offer is returned from best offer method
+		assertEquals("Best offer incorrect", newBestOffer, market.getBestOffer());
+	}
+
+	// perform tear down 
+	@After
+	public void tearDown() {
+		stock = null;
+		t = null;
+		w = null;
+		market = null;
+	}
+}

@@ -1,0 +1,95 @@
+package uk.ac.glasgow.jagora.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static uk.ac.glasgow.jagora.test.stub.StubStock.lemons;
+import static uk.ac.glasgow.jagora.test.stub.StubTrader.trader;
+import static uk.ac.glasgow.jagora.test.stub.StubWorld.world;
+
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.glasgow.jagora.BuyOrder;
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.TickEvent;
+import uk.ac.glasgow.jagora.Trader;
+import uk.ac.glasgow.jagora.World;
+import uk.ac.glasgow.jagora.impl.DefaultOrderBook;
+import uk.ac.glasgow.jagora.impl.LimitBuyOrder;
+
+public class DefaultOrderBookTest {
+	
+	// define dummy vars
+	
+	private Stock stock = lemons;
+	private World w = world;
+	private Trader t = trader;
+	
+	// define simulation objects
+	private BuyOrder order1;
+	private BuyOrder order2;
+	
+	// define test object
+	private DefaultOrderBook<BuyOrder> orderBook;
+		
+	private Integer quantity = 500;
+	private Double order1Price = 4235.2;
+	private Double order2Price = 5000.4;
+	
+	
+	
+	@Before
+	public void setUp() throws Exception {
+		
+		// init orders to simulate DefaultOrderBook
+		this.order1 = new LimitBuyOrder(t, stock, quantity, order1Price);
+		this.order2 = new LimitBuyOrder(t, stock, quantity, order2Price);
+		
+		// init class to test
+		this.orderBook = new DefaultOrderBook<>(w);
+		
+		// add orders to DefaultOrderBook
+		orderBook.recordOrder(order1);
+		orderBook.recordOrder(order2);
+	}
+	
+	// test getBestOrder method against known value
+	@Test
+	public void testGetBestOrder()
+	{
+		assertEquals("getBestOrder incorrect", order2, orderBook.getBestOrder());		
+	}
+	
+	// test getOrderAsList method
+	@Test
+	public void testGetOrdersAsList()
+	{
+		// get orders list
+		List<TickEvent<BuyOrder>> orders = orderBook.getOrdersAsList();
+		
+		// check orders list size
+		assertEquals("getOrdersAsList() list size incorrect", 2, orders.size());
+		
+		for(int i = 0; i < orders.size()-1; i++)
+		{
+			// check orders list is ordered correctly
+			assertTrue("getOrdersAsList() sorting incorrect", orders.get(i).compareTo(orders.get(i+1)) < 0);
+		}
+	}
+	
+	
+	// perform tear down
+	@After
+	public void tearDown(){
+		stock = null;
+		w = null;
+		quantity = null;
+		order1Price = null;
+		order2Price = null;
+		orderBook = null;
+		t = null;
+	}
+}

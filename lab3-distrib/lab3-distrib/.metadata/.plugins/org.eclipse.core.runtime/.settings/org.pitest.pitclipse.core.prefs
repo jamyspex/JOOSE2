@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+excludedClasses=uk.ac.glasgow.jagora.*,  uk.ac.glasgow.jagora.impl.*
+pitExecutionMode=allProjects
+pitMutators=defaultMutators

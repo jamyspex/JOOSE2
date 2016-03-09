@@ -1,0 +1,45 @@
+package uk.ac.glasgow.jagora.test.stub;
+
+import static uk.ac.glasgow.jagora.test.stub.StubStock.lemons;
+
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.TickEvent;
+import uk.ac.glasgow.jagora.Trade;
+import uk.ac.glasgow.jagora.TradeException;
+
+public class StubTrade implements Trade {
+	
+	private Integer quan;
+	private Double price;
+	
+	private StubTrade(Integer q, Double p)
+	{
+		this.quan = q;
+		this.price = p;
+	}
+	
+	@Override
+	public Stock getStock() {
+		// TODO Auto-generated method stub
+		return lemons;
+	}
+
+	@Override
+	public Integer getQuantity() {
+		// TODO Auto-generated method stub
+		return quan;
+	}
+
+	@Override
+	public Double getPrice() {
+		// TODO Auto-generated method stub
+		return price;
+	}
+
+	@Override
+	public TickEvent<Trade> execute() throws TradeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

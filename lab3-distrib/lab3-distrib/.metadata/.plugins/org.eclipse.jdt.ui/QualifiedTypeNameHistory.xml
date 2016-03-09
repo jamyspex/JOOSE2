@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.Order"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.Stock"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.World"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.Trader"/>
+<fullyQualifiedTypeName name="jdk.internal.dynalink.beans.StaticClass"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.test.stub.StubWorld"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.test.stub.StubTrader"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.test.stub.StubStock"/>
+<fullyQualifiedTypeName name="java.lang.Exception"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.BuyOrder"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.test.stub.StubBuyOrder"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.test.stub.StubSellOrder"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.SellOrder"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.Trade"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.test.stub.StubTickEvent"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.test.stub.StubTrade"/>
+<fullyQualifiedTypeName name="uk.ac.glasgow.jagora.TickEvent"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+</qualifiedTypeNameHistroy>

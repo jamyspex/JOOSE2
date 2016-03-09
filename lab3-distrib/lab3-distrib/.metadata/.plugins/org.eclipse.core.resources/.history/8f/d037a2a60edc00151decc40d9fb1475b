@@ -1,0 +1,29 @@
+package uk.ac.glasgow.jagora.test.stub;
+
+import static uk.ac.glasgow.jagora.test.stub.StubTrade.trade;
+
+import uk.ac.glasgow.jagora.TickEvent;
+
+public class StubTickEvent<T> implements TickEvent<T> {
+
+	
+	@Override
+	public Long getTick() {
+		// TODO Auto-generated method stub
+		return 100000l;
+	}
+
+	@Override
+	public int compareTo(TickEvent<T> o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public T getEvent() {
+		// TODO Auto-generated method stub
+		return (T) trade;
+	}
+
+
+}

@@ -1,0 +1,75 @@
+package uk.ac.glasgow.jagora.test.stub;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.StockExchange;
+import uk.ac.glasgow.jagora.TradeException;
+import uk.ac.glasgow.jagora.Trader;
+
+public class StubTrader implements Trader {
+
+	Double cash;
+	Set<Stock> stocks;
+	public static final Trader trader = new StubTrader ();
+	
+	
+	public StubTrader() {
+		super();
+		
+		this.cash = 10000.0d;
+		this.stocks = new HashSet<Stock>();
+		stocks.add(new StubStock());
+		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Fred Davies";
+	}
+
+	@Override
+	public Double getCash() {
+		// TODO Auto-generated method stub
+		return cash;
+	}
+
+	@Override
+	public void sellStock(Stock stock, Integer quantity, Double price) throws TradeException {
+		// TODO Auto-generated method stub
+		
+		cash += (quantity * price);
+		stocks.
+		
+	}
+
+	@Override
+	public void buyStock(Stock stock, Integer quantity, Double price) throws TradeException {
+		// TODO Auto-generated method stub
+		
+		cash -= (quantity * price);
+	}
+
+	@Override
+	public Integer getInventoryHolding(Stock stock) {
+		// TODO Auto-generated method stub
+		return 100;
+	}
+
+	@Override
+	public void speak(StockExchange stockExchange) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set<Stock> getTradingStocks() {
+		
+		return stocks;
+	}
+
+
+
+}

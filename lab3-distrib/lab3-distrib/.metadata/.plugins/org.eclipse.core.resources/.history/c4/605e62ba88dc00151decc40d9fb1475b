@@ -1,0 +1,145 @@
+package uk.ac.glasgow.jagora.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static uk.ac.glasgow.jagora.test.stub.StubStock.lemons;
+import static uk.ac.glasgow.jagora.test.stub.StubTrader.trader;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.glasgow.jagora.Stock;
+import uk.ac.glasgow.jagora.TickEvent;
+import uk.ac.glasgow.jagora.Trade;
+import uk.ac.glasgow.jagora.TradeException;
+import uk.ac.glasgow.jagora.Trader;
+import uk.ac.glasgow.jagora.impl.LimitSellOrder;
+import uk.ac.glasgow.jagora.test.stub.StubTickEvent;
+import uk.ac.glasgow.jagora.test.stub.StubTrade;
+
+public class LimitSellOrderTest {
+	
+	
+	// define dummy vars
+	
+	private Stock stock;
+	private LimitSellOrder order1;
+	private LimitSellOrder order2;
+	private Integer quantity = 500;
+	private Double order1Price = 4235.2;
+	private Double order2Price = 5000.0;
+	private Trader t;
+	private TickEvent<Trade> tick;
+	
+	@Before
+	public void setUp() throws Exception {
+		
+		// init dummy vars		
+		this.stock = lemons;
+		this.t = trader;
+		this.tick = new StubTickEvent<>();
+		
+		// init test orders
+		this.order1 = new LimitSellOrder(t, stock, quantity, order1Price);
+		this.order2 = new LimitSellOrder(t, stock, quantity, order2Price);
+	}
+	
+	// test compareTo method
+	@Test
+	public void testCompareTo()
+	{
+		// check equals using the same order
+		assertTrue("error with equals", order1.compareTo(order1) == 0);
+		
+		// check less than using known values
+		assertTrue("error with less than", order1.compareTo(order2) < 0);
+		
+		// check more than using known values
+		assertTrue("error with more than", order1.compareTo(order2) > 0);
+		
+	}
+	
+	// test getTrader method using known value
+	@Test
+	public void testGetTrader()
+	{
+		assertEquals(t, order1.getTrader());
+	}
+	
+	// test getStock method using known value
+	@Test 
+	public void testGetStock()
+	{
+		assertEquals(stock, order1.getStock());
+	}
+	
+	// test getRemainingQuantity method using known value
+	@Test
+	public void testGetRemainingQuantity()
+	{
+		assertEquals(quantity, order1.getRemainingQuantity());
+		
+	}
+	
+	// test getPrice method using known value
+	@Test
+	public void testGetPrice()
+	{
+		assertEquals(order1Price, order1.getPrice());
+	}
+	
+	// test satisfy Trade method
+	@Test
+	public void testStatisfyTrade() throws Exception{
+		// get initial quantity
+		Integer initQuan = order2.getRemainingQuantity();
+		
+		// perform trade using TickEventStub which has default quantity of 50
+		order2.satisfyTrade(tick);
+		
+		// check remainingQuantity reflects the change
+		assertEquals("issue with remaining quantity after statisfy trade", new Integer(initQuan - 50) , order2.getRemainingQuantity());
+		
+	}
+	
+	// test rollback trade method
+	@Test
+	public void testRollBackTrade() throws TradeException{
+		// get initial quantity
+		Integer initQuan = order2.getRemainingQuantity();
+		
+		// roll back trade
+		order2.rollBackTrade(tick);
+
+		// check remainingQuantity reflects the change
+		assertEquals("issue with remaining quantity after rollback trade", new Integer(initQuan + 50), order2.getRemainingQuantity());
+	}
+	
+	@Test(expected=TradeException.class)
+	public void testBadStatisfyTrade()  throws Exception {
+		
+		// get the remaining quantity
+		Integer initQuan = order2.getRemainingQuantity();
+		
+		// create a new trade for a quantity that 
+		// is larger than the available quantity
+		StubTickEvent<Trade> breakIt = new StubTickEvent<>(new StubTrade(initQuan+1, 1000.0d));
+		
+		// perform trade using TickEventStub which has default quantity of 50
+		order2.satisfyTrade(breakIt);
+	}
+		
+	// perform tearDown	
+	@After
+	public void tearDown(){
+		stock = null;
+		quantity = null;
+		order1Price = null;
+		order2Price = null;
+		order1 = null;
+		order2 = null;
+		t = null;
+		tick = null;
+	}
+}
